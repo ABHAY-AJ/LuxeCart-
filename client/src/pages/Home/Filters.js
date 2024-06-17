@@ -53,19 +53,18 @@ function Filters({
     setFilters,
 }) {
     return (
-        <div className='w-80'>
+        <div className='w-full md:w-80'>
             <div className='flex justify-between'>
-    <h1 className='text-orange-900 text-xl'>
-        Filters
-    </h1>
-    <i className='ri-close-line text-xl cursor-pointer'
-        onClick={() => setShowFilters(!showFilters)}
-    ></i>
-</div>
-
+                <h1 className='text-orange-900 text-xl'>
+                    Filters
+                </h1>
+                <i className='ri-close-line text-xl cursor-pointer'
+                    onClick={() => setShowFilters(!showFilters)}
+                ></i>
+            </div>
 
             <div className='flex flex-col gap-1 mt-5'>
-                <h1 className='text-gray-600 '>
+                <h1 className='text-gray-600'>
                     Categories
                 </h1>
 

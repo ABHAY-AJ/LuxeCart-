@@ -44,10 +44,10 @@ function Register(){
     },[]);
 
     return(
-        <div className="h-screen bg-primary flex justify-center items-center">
-            <div className="bg-white p-5 rounded w-[450px]" >
+        <div className="h-screen  flex justify-center items-center bg-primary-gradient">
+            <div className=" p-5 rounded w-[450px] bg-slate-300" >
                 <h1 className="text-primary text-2xl">
-                    SMP - <span className="text-gray-400 text-2xl">Register</span>
+                    LuxeCart - <span className="text-gray-400 text-2xl">Register</span>
                 </h1>
                 <Divider/>
                 <Form layout="vertical"
@@ -65,7 +65,7 @@ function Register(){
                         placeholder="password" />
                     </Form.Item>
 
-                    <Button type="primary" htmlType="submit" className="mt-2" block>
+                    <Button type="primary" htmlType="submit" className="mt-2 bg-blue-950" block>
                         Register
                     </Button>
 

@@ -12,7 +12,7 @@ import {GetAllBids} from "../../apicalls/products"
 
 function ProductInfo() {
   const {user} = useSelector((state)=>state.users);
-  const [showAddNewBid, setShowAddNewBid] = React.useState(0);
+  const [showAddNewBid, setShowAddNewBid] = React.useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = React.useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,17 +44,17 @@ function ProductInfo() {
       <div>
         <div className='grid grid-cols-2 gap-5 mt-5'>
           {/* images */}
-          <div className=' border-solid flex flex-col gap-5'>
+          <div className='flex flex-col gap-5'>
             <img
               src={product.images[selectedImageIndex]} alt=''
-              className='w-full h-96 object-cover rounded-md'
+              className='w-full h-96 rounded-md'
             />
             <div className='flex gap-5'>
               {product.images.map((image, index) => {
                 return (
                   <img className={
                     "w=20 h-20 object-cover rounded-md cursor-pointer" +
-                    (selectedImageIndex === index ? " border-2 border-green-700 border-dotted p-2" : "")
+                    (selectedImageIndex === index ? " border-2 border-solid border-slate-400  shadow-xl p-2" : "")
                   }
                     onClick={() => setSelectedImageIndex(index)}
                     alt=''
