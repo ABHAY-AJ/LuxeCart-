@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, Table, Collapse } from 'antd';
 import Products from './Products/index';
 import UserBids from './UserBids';
@@ -10,6 +10,7 @@ const { Panel } = Collapse;
 
 function Profile() {
   const { user } = useSelector((state) => state.users);
+  const [activeCollapseKey, setActiveCollapseKey] = useState(['1']);
 
   const columns = [
     {
@@ -44,26 +45,39 @@ function Profile() {
 
   return (
     <div className="p-4 md:p-8">
-      <Collapse defaultActiveKey={['1']} className="mt-4 md:mt-8 lg:hidden">
+      <Collapse
+        defaultActiveKey={['1']}
+        className="mt-4 md:mt-8 lg:hidden"
+        activeKey={activeCollapseKey}
+        onChange={keys => setActiveCollapseKey(keys)}
+      >
         <Panel header="Products" key="1">
           <Tabs defaultActiveKey="1">
-            <TabPane tab="Products" key="1">
-              <Products />
-            </TabPane>
+            {activeCollapseKey.includes('1') && (
+              <TabPane tab="Products" key="1">
+                <Products />
+              </TabPane>
+            )}
           </Tabs>
         </Panel>
         <Panel header="My Bids" key="2">
           <Tabs defaultActiveKey="1">
-            <TabPane tab="My Bids" key="1">
-              <UserBids />
-            </TabPane>
+            {activeCollapseKey.includes('2') && (
+              <TabPane tab="My Bids" key="1">
+                <UserBids />
+              </TabPane>
+            )}
           </Tabs>
         </Panel>
         <Panel header="General" key="3">
           <Tabs defaultActiveKey="1">
-            <TabPane tab="General" key="1">
-              <Table columns={columns} dataSource={data} pagination={false} />
-            </TabPane>
+            {activeCollapseKey.includes('3') && (
+              <TabPane tab="General" key="1">
+                <div className="max-h-[400px] overflow-y-auto">
+                  <Table columns={columns} dataSource={data} pagination={false} />
+                </div>
+              </TabPane>
+            )}
           </Tabs>
         </Panel>
       </Collapse>
@@ -76,7 +90,9 @@ function Profile() {
             <UserBids />
           </TabPane>
           <TabPane tab="General" key="3">
-            <Table columns={columns} dataSource={data} pagination={false} />
+            <div className="max-h-[400px] overflow-y-auto">
+              <Table columns={columns} dataSource={data} pagination={false} />
+            </div>
           </TabPane>
         </Tabs>
       </div>
