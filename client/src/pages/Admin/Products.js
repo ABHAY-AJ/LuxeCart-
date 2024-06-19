@@ -1,4 +1,4 @@
-import { Button, message, Table } from 'antd'
+import { Button, message, Table,Space } from 'antd'
 import React, { useEffect } from 'react'
 import moment from "moment";
 import { GetProducts, UpdateProductStatus } from "../../apicalls/products";
@@ -100,33 +100,28 @@ function Products() {
                 const { status, _id } = record;
                 return (
                     <div className='flex gap-3'>
-                        {status === "pending" && (
-                            <span className='underline cursor-pointer'
-                                onClick={() => onStatusUpdate(_id, "approved")}
-                            >
+                         <Space>
+                        {status === 'pending' && (
+                            <Button type='primary' onClick={() => onStatusUpdate(_id, 'approved')}>
                                 Approve
-                            </span>
+                            </Button>
                         )}
-                        {status === "pending" && (
-                            <span className='underline cursor-pointer'
-                                onClick={() => onStatusUpdate(_id, "rejected")}>
+                        {status === 'pending' && (
+                            <Button danger onClick={() => onStatusUpdate(_id, 'rejected')}>
                                 Reject
-                            </span>
+                            </Button>
                         )}
-
-                        {status === "approved" && (
-                            <span className='underline cursor-pointer'
-                                onClick={() => onStatusUpdate(_id, "blocked")}>
+                        {status === 'approved' && (
+                            <Button danger onClick={() => onStatusUpdate(_id, 'blocked')}>
                                 Block
-                            </span>
+                            </Button>
                         )}
-
-                        {status === "blocked" && (
-                            <span className='underline cursor-pointer'
-                                onClick={() => onStatusUpdate(_id, "approved")}>
-                                unblock
-                            </span>
+                        {status === 'blocked' && (
+                            <Button type='primary' onClick={() => onStatusUpdate(_id, 'approved')}>
+                                Unblock
+                            </Button>
                         )}
+                    </Space>
                     </div>
                 )
             }

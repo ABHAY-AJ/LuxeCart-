@@ -4,7 +4,7 @@ module.exports = (req, res, next)=>{
 
         //get token from header
         const token = req.header("authorization").split(" ")[1];
-        const decryptedToken = jwt.verify(token, process.env.jwt_secret);
+        const decryptedToken = jwt.verify(token, "sheymp");
         req.body.userId = decryptedToken.userId;
         next();
     } catch(error){

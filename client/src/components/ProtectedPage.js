@@ -2,14 +2,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GetCurrentUser } from '../apicalls/users';
-import { Avatar, Badge, message } from 'antd';
+import { Avatar, Badge, message, Menu, Dropdown, Spin } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 import { SetLoader } from '../redux/loadersSlice';
 import { SetUser } from '../redux/usersSlice';
 import Notifications from './Notifications';
 import { GetAllNotifications, ReadAllNotifications } from "../apicalls/notifications";
 
 function ProtectedPage({ children }) {
-    const [notifications = [], setNotifications] = useState([]);
+    const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
     const { user } = useSelector((state) => state.users);
     const navigate = useNavigate();
@@ -17,9 +18,9 @@ function ProtectedPage({ children }) {
     
     const validateToken = async () => {
         try {
-            dispatch(SetLoader(true))
+            dispatch(SetLoader(true));
             const response = await GetCurrentUser();
-            dispatch(SetLoader(false))
+            dispatch(SetLoader(false));
             
             if (response.success) {
                 dispatch(SetUser(response.data));
@@ -29,7 +30,7 @@ function ProtectedPage({ children }) {
                 message.error(errorMsg);
             }
         } catch (error) {
-            dispatch(SetLoader(false))
+            dispatch(SetLoader(false));
             const errorMsg = error.message || 'Error: Something went wrong';
             console.error('Error:', errorMsg);
             message.error(errorMsg);
@@ -67,11 +68,47 @@ function ProtectedPage({ children }) {
     useEffect(() => {
         if (localStorage.getItem("token")) {
             validateToken();
-            getNotifications()
+            getNotifications();
         } else {
             navigate("/login");
         }
     }, []);
+
+    const menu = (
+        <Menu>
+            <Menu.Item key="profile" onClick={() => {
+                if (user && user.role === "user") {
+                    navigate("/profile");
+                } else if (user) {
+                    navigate("/admin");
+                }
+            }}>
+                <i className="ri-shield-user-line"></i> {user && user.name}
+            </Menu.Item>
+            <Menu.Item key="notifications" onClick={() => {
+                readNotifications();
+                setShowNotifications(true);
+            }}>
+                <Badge count={notifications?.filter((notification) => !notification.read).length}>
+                    <i className='ri-notification-3-line'></i> Notifications
+                </Badge>
+            </Menu.Item>
+            <Menu.Item key="logout" onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/login");
+            }}>
+                <i className="ri-logout-box-r-line"></i> Logout
+            </Menu.Item>
+        </Menu>
+    );
+
+    if (!user) {
+        return (
+            <div className='flex justify-center items-center h-screen'>
+                <Spin size="large" />
+            </div>
+        );
+    }
 
     return (
         user && (
@@ -82,38 +119,43 @@ function ProtectedPage({ children }) {
                         LuxeCart <i className="ri-shopping-bag-line"></i>
                     </h1>
                     <div className='flex items-center space-x-4 md:space-x-8'>
-                        <span
-                            className=' cursor-pointer uppercase font-semibold text-white md:text-base'
-                            onClick={() => {
-                                if (user.role === "user") {
-                                    navigate("/profile");
-                                } else {
-                                    navigate("/admin");
-                                }
-                            }}>
-                           <i class="ri-shield-user-line"></i> {user.name}
-                        </span>
-                        <Badge
-                            count={notifications?.filter((notification) => !notification.read).length}
-                            onClick={() => {
-                                readNotifications();
-                                setShowNotifications(true);
-                            }}
-                            className='cursor-pointer'
-                        >
-                            <Avatar
-                                shape='circle'
-                                size='small'
-                                icon={<i className='ri-notification-3-line'></i>}
-                            />
-                        </Badge>
-                        <i
-                            className="ri-logout-box-r-line cursor-pointer"
-                            onClick={() => {
-                                localStorage.removeItem("token");
-                                navigate("/login");
-                            }}
-                        ></i>
+                        <div className='hidden md:flex items-center space-x-4'>
+                            <span
+                                className='cursor-pointer uppercase font-semibold text-white md:text-base'
+                                onClick={() => {
+                                    if (user.role === "user") {
+                                        navigate("/profile");
+                                    } else {
+                                        navigate("/admin");
+                                    }
+                                }}>
+                               <i className="ri-shield-user-line"></i> {user.name}
+                            </span>
+                            <Badge
+                                count={notifications?.filter((notification) => !notification.read).length}
+                                onClick={() => {
+                                    readNotifications();
+                                    setShowNotifications(true);
+                                }}
+                                className='cursor-pointer'
+                            >
+                                <Avatar
+                                    shape='circle'
+                                    size='small'
+                                    icon={<i className='ri-notification-3-line'></i>}
+                                />
+                            </Badge>
+                            <i
+                                className="ri-logout-box-r-line cursor-pointer"
+                                onClick={() => {
+                                    localStorage.removeItem("token");
+                                    navigate("/login");
+                                }}
+                            ></i>
+                        </div>
+                        <Dropdown overlay={menu} trigger={['click']} className='md:hidden'>
+                            <MenuOutlined className='text-white text-lg cursor-pointer' />
+                        </Dropdown>
                     </div>
                 </div>
                 {/* Content */}

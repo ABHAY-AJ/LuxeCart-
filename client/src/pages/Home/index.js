@@ -73,7 +73,7 @@ function Home() {
                     {products?.map((product) => {
                         return (
                             <div
-                                className="border border-gray-300 rounded border-solid flex flex-col gap-2 pb-2 cursor-pointer shadow-lg"
+                                className="border border-gray-300 rounded border-solid flex flex-col gap-2 pb-2 cursor-pointer shadow-lg hover:shadow-2xl opacity-100 hover:opacity-90 transform hover:scale-105 transition duration-300"
                                 key={product._id}
                                 onClick={() => navigate(`/product/${product._id}`)}
                             >
