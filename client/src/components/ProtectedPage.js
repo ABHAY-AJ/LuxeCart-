@@ -25,15 +25,10 @@ function ProtectedPage({ children }) {
             if (response.success) {
                 dispatch(SetUser(response.data));
             } else {
-                navigate("/login");
-                const errorMsg = response.message || 'Error: Invalid response';
-                message.error(errorMsg);
+                handleLogout();
             }
         } catch (error) {
-            dispatch(SetLoader(false));
-            const errorMsg = error.message || 'Error: Something went wrong';
-            console.error('Error:', errorMsg);
-            message.error(errorMsg);
+            handleLogout();
         }
     };
 
@@ -65,6 +60,12 @@ function ProtectedPage({ children }) {
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        dispatch(SetUser(null));
+        navigate("/login");
+    }
+
     useEffect(() => {
         if (localStorage.getItem("token")) {
             validateToken();
@@ -93,22 +94,11 @@ function ProtectedPage({ children }) {
                     <i className='ri-notification-3-line'></i> Notifications
                 </Badge>
             </Menu.Item>
-            <Menu.Item key="logout" onClick={() => {
-                localStorage.removeItem("token");
-                navigate("/login");
-            }}>
+            <Menu.Item key="logout" onClick={handleLogout}>
                 <i className="ri-logout-box-r-line"></i> Logout
             </Menu.Item>
         </Menu>
     );
-
-    if (!user) {
-        return (
-            <div className='flex justify-center items-center h-screen'>
-                <Spin size="large" />
-            </div>
-        );
-    }
 
     return (
         user && (
@@ -147,10 +137,7 @@ function ProtectedPage({ children }) {
                             </Badge>
                             <i
                                 className="ri-logout-box-r-line cursor-pointer"
-                                onClick={() => {
-                                    localStorage.removeItem("token");
-                                    navigate("/login");
-                                }}
+                                onClick={handleLogout}
                             ></i>
                         </div>
                         <Dropdown overlay={menu} trigger={['click']} className='md:hidden'>
