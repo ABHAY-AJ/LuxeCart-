@@ -4,13 +4,13 @@ module.exports = (req, res, next)=>{
 
         //get token from header
         const token = req.header("authorization").split(" ")[1];
-        const decryptedToken = jwt.verify(token, "sheymp");
+        const decryptedToken = jwt.verify(token, process.env.jwt_secret);
         req.body.userId = decryptedToken.userId;
         next();
     } catch(error){
         res.send({
             success:false,
-            message:error.mmessage
+            message:error.message
         })
     }
 }
